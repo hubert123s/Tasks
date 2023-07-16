@@ -24,7 +24,7 @@ public class Rate {
     private Long id;
     private String currency;
     private String name;
-    private OffsetDateTime date =OffsetDateTime.parse(OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
+    private OffsetDateTime date = OffsetDateTime.parse(OffsetDateTime.now(ZoneOffset.ofHours(2)).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")));
     @Column(precision = 10, scale = 4)
     private BigDecimal value;
 }

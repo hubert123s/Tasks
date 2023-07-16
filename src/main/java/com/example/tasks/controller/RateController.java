@@ -23,7 +23,7 @@ public class RateController {
     }
 
     @PostMapping("/get-current-currency-value-command")
-    RateSelected addRate(@RequestBody Rate rate) throws NotFoundCurrencyException, ParseException {
+    RateSelected addRate(@RequestBody Rate rate) throws NotFoundCurrencyException {
         return rateService.saveRate(rate);
     }
 }
