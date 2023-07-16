@@ -1,4 +1,4 @@
-package com.example.tasks;
+package com.example.tasks.service;
 
 import com.example.tasks.client.RateClient;
 import com.example.tasks.exception.NotFoundCurrencyException;
