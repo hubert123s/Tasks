@@ -1,13 +1,10 @@
 package com.example.tasks.service;
 
+import com.example.tasks.model.*;
 import com.example.tasks.repository.RateRepository;
 import com.example.tasks.exception.NotFoundCurrencyException;
 import com.example.tasks.mapper.RateMapper;
-import com.example.tasks.model.ApiDto;
 import com.example.tasks.client.RateClient;
-import com.example.tasks.model.Rate;
-import com.example.tasks.model.RateDto;
-import com.example.tasks.model.RateSelected;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +37,8 @@ public class RateService {
         }
     }
 
-    public List<Rate> findAll() {
-        return rateRepository.findAll();
+    public List<RateOutputDto> findAll() {
+        return rateRepository.findAll().stream().map(rateMapper::toDtoWithoutID).toList();
     }
 
     public RateSelected saveRate(Rate rate) throws NotFoundCurrencyException {

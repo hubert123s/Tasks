@@ -3,10 +3,7 @@ package com.example.tasks;
 import com.example.tasks.client.RateClient;
 import com.example.tasks.exception.NotFoundCurrencyException;
 import com.example.tasks.mapper.RateMapper;
-import com.example.tasks.model.ApiDto;
-import com.example.tasks.model.Rate;
-import com.example.tasks.model.RateDto;
-import com.example.tasks.model.RateSelected;
+import com.example.tasks.model.*;
 import com.example.tasks.repository.RateRepository;
 import com.example.tasks.service.RateService;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +50,7 @@ class RateServiceTest {
         List<Rate> rateList = Arrays.asList(new Rate(), new Rate());
         when(rateRepository.findAll()).thenReturn(rateList);
 
-        List<Rate> result = rateService.findAll();
+        List<RateOutputDto> result = rateService.findAll();
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -64,14 +61,6 @@ class RateServiceTest {
 
         RateService rateService = new RateService(rateClient, rateRepository, rateMapper);
 
-        RateDto rateDto1 = new RateDto();
-        rateDto1.setCode("USD");
-        rateDto1.setMid(BigDecimal.valueOf(1.234));
-        RateDto rateDto2 = new RateDto();
-        rateDto2.setCode("EUR");
-        rateDto2.setMid(BigDecimal.valueOf(2.345));
-
-        ApiDto apiDto = new ApiDto();
         apiDto.setRates(Arrays.asList(rateDto1, rateDto2));
         when(rateClient.getRate()).thenReturn(new ApiDto[]{apiDto});
 

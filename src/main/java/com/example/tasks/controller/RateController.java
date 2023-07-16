@@ -2,6 +2,7 @@ package com.example.tasks.controller;
 
 import com.example.tasks.model.Rate;
 import com.example.tasks.exception.NotFoundCurrencyException;
+import com.example.tasks.model.RateOutputDto;
 import com.example.tasks.model.RateSelected;
 import com.example.tasks.service.RateService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class RateController {
     private final RateService rateService;
 
     @GetMapping("/request")
-    List<Rate> getRequest() {
+    List<RateOutputDto> getRequest() {
         return rateService.findAll();
     }
 
