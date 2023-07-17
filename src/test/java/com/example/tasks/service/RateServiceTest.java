@@ -2,10 +2,8 @@ package com.example.tasks.service;
 
 import com.example.tasks.client.RateClient;
 import com.example.tasks.exception.NotFoundCurrencyException;
-import com.example.tasks.mapper.RateMapper;
 import com.example.tasks.model.*;
 import com.example.tasks.repository.RateRepository;
-import com.example.tasks.service.RateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,32 +23,22 @@ class RateServiceTest {
     private RateClient rateClient;
     @Mock
     private RateRepository rateRepository;
-    @Mock
-    private RateMapper rateMapper;
     private final Rate rate = new Rate();
-    private final RateDto rateDto1 = new RateDto();
-    private final RateDto rateDto2 = new RateDto();
-    private final ApiDto apiDto = new ApiDto();
 
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         rate.setCurrency("USD");
-        rateDto1.setCode("USD");
-        rateDto1.setMid(BigDecimal.valueOf(1.234));
-        rateDto2.setCode("EUR");
-        rateDto2.setMid(BigDecimal.valueOf(2.345));
-        apiDto.setRates(Arrays.asList(rateDto1, rateDto2));
     }
 
     @Test
     void findAll_ReturnsListOfRates() {
-        RateService rateService = new RateService(rateClient, rateRepository, rateMapper);
+        RateService rateService = new RateService(rateClient, rateRepository);
         List<Rate> rateList = Arrays.asList(new Rate(), new Rate());
         when(rateRepository.findAll()).thenReturn(rateList);
 
-        List<RateOutputDto> result = rateService.findAll();
+        List<RateRequestResponse> result = rateService.findAll();
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -59,10 +47,9 @@ class RateServiceTest {
     @Test
     void searchCurrencyValue_ExistingCurrency_ReturnsCurrencyValue() throws NotFoundCurrencyException {
 
-        RateService rateService = new RateService(rateClient, rateRepository, rateMapper);
+        RateService rateService = new RateService(rateClient, rateRepository);
 
-        apiDto.setRates(Arrays.asList(rateDto1, rateDto2));
-        when(rateClient.getRate()).thenReturn(new ApiDto[]{apiDto});
+        when(rateClient.getRate()).thenReturn(new RatesResponse[]{createRatesResponse()});
 
         BigDecimal result = rateService.searchCurrencyValue("USD");
 
@@ -72,27 +59,36 @@ class RateServiceTest {
     @Test
     void searchCurrencyValue_NonExistingCurrency_ThrowsNotFoundCurrencyException() {
 
-        RateService rateService = new RateService(rateClient, rateRepository, rateMapper);
-        when(rateClient.getRate()).thenReturn(new ApiDto[]{apiDto});
+        RateService rateService = new RateService(rateClient, rateRepository);
+        when(rateClient.getRate()).thenReturn(new RatesResponse[]{createRatesResponse()});
 
         assertThrows(NotFoundCurrencyException.class, () -> rateService.searchCurrencyValue("GBP"));
     }
 
 
     @Test
-    void saveRate_ValidRate_ReturnsRateSelectedDto() throws NotFoundCurrencyException {
+    void saveRate() throws NotFoundCurrencyException {
 
-        RateService rateService = new RateService(rateClient, rateRepository, rateMapper);
+        RateService rateService = new RateService(rateClient, rateRepository);
 
-        when(rateClient.getRate()).thenReturn(new ApiDto[]{apiDto});
+        when(rateClient.getRate()).thenReturn(new RatesResponse[]{createRatesResponse()});
         when(rateRepository.save(any(Rate.class))).thenReturn(rate);
-        when(rateMapper.toDto(any(Rate.class))).thenReturn(new RateSelected());
 
-        RateSelected result = rateService.saveRate(rate);
+        GetCurrentCurrencyValueCommandResponse result = rateService.getCurrentCurrencyValue(createGetCurrentCurrencyValueCommand());
 
         assertNotNull(result);
-        verify(rateRepository, times(1)).save(rate);
-        verify(rateMapper, times(1)).toDto(rate);
+        verify(rateRepository, times(1)).save(any(Rate.class));
     }
 
+    private RateResponse createRateResponse() {
+        return new RateResponse("USD", BigDecimal.valueOf(1.234));
+    }
+
+    private RatesResponse createRatesResponse() {
+        return new RatesResponse(Arrays.asList(createRateResponse()));
+    }
+
+    private GetCurrentCurrencyValueCommand createGetCurrentCurrencyValueCommand() {
+        return new GetCurrentCurrencyValueCommand("USD", "Jan Nowak");
+    }
 }

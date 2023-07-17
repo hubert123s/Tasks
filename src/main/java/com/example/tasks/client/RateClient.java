@@ -1,6 +1,6 @@
 package com.example.tasks.client;
 
-import com.example.tasks.model.ApiDto;
+import com.example.tasks.model.RatesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,11 +15,11 @@ public class RateClient {
     private final RestTemplate restTemplate = new RestTemplate();
     private final static String IMAGE_URL = "https://api.nbp.pl/api/exchangerates/tables/A?format=json";
 
-    public ApiDto[] getRate() {
-        ResponseEntity<ApiDto[]> exchange = restTemplate.exchange(IMAGE_URL,
+    public RatesResponse[] getRate() {
+        ResponseEntity<RatesResponse[]> exchange = restTemplate.exchange(IMAGE_URL,
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
-                ApiDto[].class);
+                RatesResponse[].class);
         return exchange.getBody();
     }
 }

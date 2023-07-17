@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler(NotFoundCurrencyException.class)
-    ResponseEntity<String> handleNotFoundMealException(NotFoundCurrencyException exception) {
+    ResponseEntity<String> handleNotFoundException(NotFoundCurrencyException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());

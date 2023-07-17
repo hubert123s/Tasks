@@ -1,14 +1,13 @@
 package com.example.tasks.controller;
 
-import com.example.tasks.model.Rate;
+import com.example.tasks.model.GetCurrentCurrencyValueCommand;
 import com.example.tasks.exception.NotFoundCurrencyException;
-import com.example.tasks.model.RateOutputDto;
-import com.example.tasks.model.RateSelected;
+import com.example.tasks.model.RateRequestResponse;
+import com.example.tasks.model.GetCurrentCurrencyValueCommandResponse;
 import com.example.tasks.service.RateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -19,12 +18,12 @@ public class RateController {
     private final RateService rateService;
 
     @GetMapping("/request")
-    List<RateOutputDto> getRequest() {
+    List<RateRequestResponse> getRequest() {
         return rateService.findAll();
     }
 
     @PostMapping("/get-current-currency-value-command")
-    RateSelected addRate(@RequestBody Rate rate) throws NotFoundCurrencyException {
-        return rateService.saveRate(rate);
+    GetCurrentCurrencyValueCommandResponse getCurrentCurrencyValue(@RequestBody GetCurrentCurrencyValueCommand getCurrentCurrencyValueCommand) throws NotFoundCurrencyException {
+        return rateService.getCurrentCurrencyValue(getCurrentCurrencyValueCommand);
     }
 }
